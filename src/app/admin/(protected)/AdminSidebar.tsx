@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { createBrowserClient } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
@@ -35,12 +34,7 @@ export default function AdminSidebar() {
   const router = useRouter();
 
   async function handleLogout() {
-    if (process.env.NEXT_PUBLIC_USE_MOCK_DB === "true") {
-      await fetch("/api/admin/logout", { method: "POST" });
-    } else {
-      const supabase = createBrowserClient();
-      await supabase.auth.signOut();
-    }
+    await fetch("/api/admin/logout", { method: "POST" });
     router.push("/admin");
     router.refresh();
   }
