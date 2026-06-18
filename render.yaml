@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: flamemarket
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: USE_MOCK_DB
+        value: "true"
+      - key: NEXT_PUBLIC_USE_MOCK_DB
+        value: "true"
+      - key: NEXT_PUBLIC_BASE_URL
+        fromService:
+          type: web
+          name: flamemarket
+          property: host
+      - key: ADMIN_EMAIL
+        value: admin@flamemarket.com
+      - key: ADMIN_PASSWORD
+        value: flamemarket-admin-2024
+      - key: STORE_EMAIL
+        value: hello@flamemarket.com
+      - key: NEXT_TELEMETRY_DISABLED
+        value: "1"

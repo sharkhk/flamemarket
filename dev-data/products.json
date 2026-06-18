@@ -1,0 +1,122 @@
+[
+  {
+    "id": "prod-001",
+    "name": "Dragon Knight Figure",
+    "slug": "dragon-knight-figure",
+    "description": "A highly detailed dragon knight in full plate armour, mid-stance with sword raised. Printed at 0.05mm layer height for crisp surface detail. Ships unprimed — ready for painting or display as-is.",
+    "price": 189,
+    "category": "figures",
+    "images": [
+      "https://images.unsplash.com/photo-1529981188441-8a2e6fe30103?w=800&q=80"
+    ],
+    "model_url": null,
+    "weight_grams": 320,
+    "dimensions": { "l": 10, "w": 8, "h": 24 },
+    "stock": 10,
+    "available_colors": ["Unpainted (White)", "Primed Grey", "Resin Grey"],
+    "available_sizes": ["1/10 Scale (24cm)", "1/12 Scale (18cm)"],
+    "is_active": true,
+    "created_at": "2026-06-11T10:00:00.000Z",
+    "updated_at": "2026-06-11T10:00:00.000Z"
+  },
+  {
+    "id": "prod-002",
+    "name": "Oni Warrior Figure",
+    "slug": "oni-warrior-figure",
+    "description": "A fearsome Oni demon warrior with horns, spiked club, and flowing battle robes. Inspired by Japanese folklore. Printed in high-detail resin-style FDM with sanded finish on key surfaces.",
+    "price": 149,
+    "category": "figures",
+    "images": [
+      "https://images.unsplash.com/photo-1765118477495-212b9e5aaade?w=800&q=80"
+    ],
+    "model_url": null,
+    "weight_grams": 260,
+    "dimensions": { "l": 9, "w": 7, "h": 22 },
+    "stock": 8,
+    "available_colors": ["Unpainted (White)", "Primed Grey"],
+    "available_sizes": ["1/10 Scale (22cm)", "1/12 Scale (16cm)"],
+    "is_active": true,
+    "created_at": "2026-06-04T10:00:00.000Z",
+    "updated_at": "2026-06-04T10:00:00.000Z"
+  },
+  {
+    "id": "prod-003",
+    "name": "Space Marine Miniature",
+    "slug": "space-marine-miniature",
+    "description": "A 28mm tabletop-scale Space Marine in power armour, compatible with standard gaming bases. High-detail FDM print at 0.05mm — crisp enough for competitive painting. Sold single.",
+    "price": 45,
+    "category": "miniatures",
+    "images": [
+      "https://images.unsplash.com/photo-1776426284678-5f0ac0dd2112?w=800&q=80"
+    ],
+    "model_url": null,
+    "weight_grams": 35,
+    "dimensions": { "l": 3, "w": 3, "h": 4 },
+    "stock": 50,
+    "available_colors": ["Unpainted (Grey)", "Unpainted (White)"],
+    "available_sizes": ["28mm Scale"],
+    "is_active": true,
+    "created_at": "2026-06-13T10:00:00.000Z",
+    "updated_at": "2026-06-13T10:00:00.000Z"
+  },
+  {
+    "id": "prod-004",
+    "name": "Fantasy Dungeon Pack",
+    "slug": "fantasy-dungeon-pack",
+    "description": "A set of 5 mixed fantasy miniatures — a wizard, ranger, paladin, rogue, and barbarian. Perfect for tabletop RPG campaigns. All at 28mm scale on round bases. Ships as a set.",
+    "price": 199,
+    "category": "miniatures",
+    "images": [
+      "https://images.unsplash.com/photo-1776426400619-414d635cb703?w=800&q=80"
+    ],
+    "model_url": null,
+    "weight_grams": 180,
+    "dimensions": { "l": 10, "w": 8, "h": 4 },
+    "stock": 15,
+    "available_colors": ["Unpainted (Grey)", "Unpainted (White)"],
+    "available_sizes": ["28mm Scale (Set of 5)"],
+    "is_active": true,
+    "created_at": "2026-05-28T10:00:00.000Z",
+    "updated_at": "2026-05-28T10:00:00.000Z"
+  },
+  {
+    "id": "prod-005",
+    "name": "Custom Display Base",
+    "slug": "custom-display-base",
+    "description": "A premium weighted display base with a raised nameplate section. Enter your figure name and we engrave it directly into the print. Compatible with any figure up to 30cm tall.",
+    "price": 79,
+    "category": "custom",
+    "images": [
+      "https://images.unsplash.com/photo-1592689321206-3df781b6811e?w=800&q=80"
+    ],
+    "model_url": null,
+    "weight_grams": 290,
+    "dimensions": { "l": 14, "w": 14, "h": 3 },
+    "stock": 25,
+    "available_colors": ["Matte Black", "Brushed Gold (painted)", "Marble White"],
+    "available_sizes": ["Small (10cm base)", "Large (14cm base)"],
+    "is_active": true,
+    "created_at": "2026-06-15T10:00:00.000Z",
+    "updated_at": "2026-06-15T10:00:00.000Z"
+  },
+  {
+    "id": "prod-006",
+    "name": "Engraved Name Plate",
+    "slug": "engraved-name-plate",
+    "description": "A custom nameplate for shelves, desks, or figure displays. Add any name, title, or quote up to 30 characters. Deep-engraved text, not a sticker. Fits standard Funko-style display shelves.",
+    "price": 35,
+    "category": "custom",
+    "images": [
+      "https://images.unsplash.com/photo-1771174661944-7c092d8d12f6?w=800&q=80"
+    ],
+    "model_url": null,
+    "weight_grams": 60,
+    "dimensions": { "l": 12, "w": 3, "h": 1 },
+    "stock": 99,
+    "available_colors": ["Matte Black", "Matte White", "Gold (painted)"],
+    "available_sizes": ["Standard (12cm)"],
+    "is_active": true,
+    "created_at": "2026-06-08T10:00:00.000Z",
+    "updated_at": "2026-06-08T10:00:00.000Z"
+  }
+]
