@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { createBrowserClient } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,12 +9,10 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { Lock } from "lucide-react";
 
-const IS_DEV_MOCK = process.env.NEXT_PUBLIC_USE_MOCK_DB === "true";
-
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState(IS_DEV_MOCK ? "admin@flamemarket.com" : "");
-  const [password, setPassword] = useState(IS_DEV_MOCK ? "flamemarket-admin-2024" : "");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -25,34 +22,16 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
-      if (IS_DEV_MOCK) {
-        // Dev mode: validate against env vars via API route
-        const res = await fetch("/api/admin/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          setError(data.error ?? "Invalid credentials");
-          return;
-        }
-        router.push("/admin/dashboard");
-        router.refresh();
-        return;
-      }
-
-      const supabase = createBrowserClient();
-      const { error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
-
-      if (authError) {
-        setError(authError.message);
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error ?? "Invalid credentials");
         return;
       }
-
       router.push("/admin/dashboard");
       router.refresh();
     } catch {
@@ -80,11 +59,6 @@ export default function AdminLoginPage() {
           <p className="text-sm text-muted-foreground mt-1">
             Sign in to manage your store
           </p>
-          {IS_DEV_MOCK && (
-            <p className="text-xs text-gold/60 mt-1 font-mono">
-              Dev mode — credentials pre-filled
-            </p>
-          )}
         </div>
 
         <Card className="border-border bg-card shadow-xl">

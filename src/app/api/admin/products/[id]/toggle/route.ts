@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase-server";
 
+function isMockMode(): boolean {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+  return process.env.USE_MOCK_DB === "true" || !url || url.includes("your-project-id");
+}
+
 function isAuthenticated(request: NextRequest): boolean {
-  if (process.env.USE_MOCK_DB === "true") {
+  if (isMockMode()) {
     return request.cookies.get("flamemarket-dev-auth")?.value === "authenticated";
   }
   return true;

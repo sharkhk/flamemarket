@@ -1,7 +1,11 @@
 import { createClient } from "@supabase/supabase-js";
 import { createMockClient } from "./mock-db";
 
-const IS_DEV_MOCK = process.env.USE_MOCK_DB === "true";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+const IS_DEV_MOCK =
+  process.env.USE_MOCK_DB === "true" ||
+  !supabaseUrl ||
+  supabaseUrl.includes("your-project-id");
 
 // ── Server-auth client (uses cookies) ─────────────────────────────────────
 // In dev-mock mode this returns the same mock client.

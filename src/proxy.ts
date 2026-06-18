@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const IS_DEV_MOCK = process.env.USE_MOCK_DB === "true";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+const IS_DEV_MOCK =
+  process.env.USE_MOCK_DB === "true" ||
+  !supabaseUrl ||
+  supabaseUrl.includes("your-project-id");
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;

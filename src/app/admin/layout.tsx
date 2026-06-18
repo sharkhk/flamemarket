@@ -3,7 +3,11 @@ import { cookies } from "next/headers";
 import { createSupabaseServerClient } from "@/lib/supabase-server";
 import AdminSidebar from "./AdminSidebar";
 
-const IS_DEV_MOCK = process.env.USE_MOCK_DB === "true";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+const IS_DEV_MOCK =
+  process.env.USE_MOCK_DB === "true" ||
+  !supabaseUrl ||
+  supabaseUrl.includes("your-project-id");
 
 export default async function AdminLayout({
   children,

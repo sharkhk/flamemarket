@@ -76,7 +76,8 @@ export async function POST(req: NextRequest) {
     });
 
     // In dev mock mode, mark as paid immediately (no real Ziina redirect)
-    const isMock = process.env.USE_MOCK_DB === "true";
+    const _supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
+    const isMock = process.env.USE_MOCK_DB === "true" || !_supabaseUrl || _supabaseUrl.includes("your-project-id");
     await supabase
       .from("orders")
       .update({
