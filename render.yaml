@@ -16,7 +16,7 @@ services:
         fromService:
           type: web
           name: flamemarket
-          property: host
+          property: hostURL
       - key: ADMIN_EMAIL
         value: admin@flamemarket.com
       - key: ADMIN_PASSWORD
