@@ -9,10 +9,9 @@ import { formatPrice } from "@/lib/utils";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 
 export default function CartPage() {
-  const { items, removeItem, updateQuantity, subtotal, setOpen } = useCart();
+  const { items, removeItem, updateQuantity, subtotal } = useCart();
 
   return (
     <>
@@ -55,6 +54,40 @@ export default function CartPage() {
             </motion.div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+              {/* Order Summary — top on mobile, right column on desktop */}
+              <div className="lg:col-span-1 lg:order-last order-first">
+                <div className="sticky top-28 rounded-2xl bg-card border border-border p-6 space-y-4">
+                  <h2 className="font-heading font-semibold text-lg">Order Summary</h2>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Subtotal</span>
+                      <span className="text-foreground">{formatPrice(subtotal)}</span>
+                    </div>
+                    <div className="flex justify-between text-muted-foreground">
+                      <span>Shipping</span>
+                      <span>Calculated at checkout</span>
+                    </div>
+                  </div>
+                  <div className="border-t border-border pt-4 flex justify-between font-heading font-bold text-lg">
+                    <span>Subtotal</span>
+                    <span className="text-gold">{formatPrice(subtotal)}</span>
+                  </div>
+                  <Button
+                    className="w-full bg-gold hover:opacity-90 text-white font-medium gap-2"
+                    size="lg"
+                    asChild
+                  >
+                    <Link href="/checkout">
+                      Checkout
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <Button variant="outline" className="w-full" asChild>
+                    <Link href="/shop">Continue Shopping</Link>
+                  </Button>
+                </div>
+              </div>
+
               {/* Items */}
               <div className="lg:col-span-2 space-y-4">
                 <AnimatePresence initial={false}>
@@ -151,52 +184,6 @@ export default function CartPage() {
                 </AnimatePresence>
               </div>
 
-              {/* Order Summary */}
-              <div className="lg:col-span-1">
-                <div className="sticky top-28 rounded-2xl bg-card border border-border p-6 space-y-4">
-                  <h2 className="font-heading font-semibold text-lg">
-                    Order Summary
-                  </h2>
-                  <Separator />
-
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between text-muted-foreground">
-                      <span>Subtotal</span>
-                      <span className="text-foreground">
-                        {formatPrice(subtotal)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between text-muted-foreground">
-                      <span>Shipping</span>
-                      <span>Calculated at checkout</span>
-                    </div>
-                  </div>
-
-                  <Separator />
-
-                  <div className="flex justify-between font-heading font-bold text-lg">
-                    <span>Total</span>
-                    <span className="text-gold">{formatPrice(subtotal)}</span>
-                  </div>
-
-                  <Button
-                    className="w-full bg-gold hover:opacity-90 text-white font-medium gap-2"
-                    size="lg"
-                    asChild
-                  >
-                    <Link href="/checkout">
-                      Checkout
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-                  </Button>
-
-                  <Button variant="outline" className="w-full" asChild>
-                    <Link href="/shop" onClick={() => setOpen(false)}>
-                      Continue Shopping
-                    </Link>
-                  </Button>
-                </div>
-              </div>
             </div>
           )}
         </div>

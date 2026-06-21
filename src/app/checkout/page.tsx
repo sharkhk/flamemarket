@@ -21,6 +21,7 @@ import { formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import type { CartItem } from "@/lib/cart";
 
 const SHIPPING_COST = 30;
 
@@ -32,7 +33,6 @@ const schema = z.object({
   line2: z.string().optional(),
   city: z.string().min(2, "City is required"),
   emirate: z.string().min(2, "Please select an emirate"),
-  country: z.string(),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -60,6 +60,70 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
+// Defined outside component to prevent remount on every render
+function SummaryItems({ items }: { items: CartItem[] }) {
+  return (
+    <div className="divide-y divide-border">
+      {items.map((item) => (
+        <div
+          key={`${item.id}-${item.selectedColor}-${item.selectedSize}`}
+          className="flex items-center gap-4 py-4"
+        >
+          <div className="relative shrink-0">
+            <div className="w-14 h-14 rounded-xl overflow-hidden bg-muted border border-border">
+              {item.image && (
+                <Image src={item.image} alt={item.name} fill className="object-cover" />
+              )}
+            </div>
+            <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-foreground text-background text-[10px] font-bold flex items-center justify-center leading-none">
+              {item.quantity}
+            </span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium leading-tight truncate">{item.name}</p>
+            {(item.selectedColor || item.selectedSize) && (
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {[item.selectedColor, item.selectedSize].filter(Boolean).join(" · ")}
+              </p>
+            )}
+          </div>
+          <p className="text-sm font-medium shrink-0">
+            {formatPrice(item.price * item.quantity)}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function SummaryTotals({
+  subtotal,
+  total,
+}: {
+  subtotal: number;
+  total: number;
+}) {
+  return (
+    <div className="space-y-2 pt-4">
+      <div className="flex justify-between text-sm">
+        <span className="text-muted-foreground">Subtotal</span>
+        <span>{formatPrice(subtotal)}</span>
+      </div>
+      <div className="flex justify-between text-sm">
+        <span className="text-muted-foreground">Shipping</span>
+        <span>{formatPrice(SHIPPING_COST)}</span>
+      </div>
+      <div className="flex justify-between font-heading font-bold text-base pt-3 border-t border-border">
+        <span>Total</span>
+        <span>
+          <span className="text-xs font-normal text-muted-foreground mr-1">AED</span>
+          {total.toFixed(2)}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCart();
   const [loading, setLoading] = useState(false);
@@ -71,12 +135,8 @@ export default function CheckoutPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({
-    resolver: zodResolver(schema),
-    defaultValues: { country: "United Arab Emirates" },
-  });
+  } = useForm<FormData>({ resolver: zodResolver(schema) });
 
-  // ── Empty cart ──────────────────────────────────────────────────────────────
   if (items.length === 0) {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4 px-4">
@@ -90,7 +150,6 @@ export default function CheckoutPage() {
     );
   }
 
-  // ── Submit ──────────────────────────────────────────────────────────────────
   const onSubmit = async (data: FormData) => {
     setLoading(true);
     try {
@@ -104,7 +163,7 @@ export default function CheckoutPage() {
             line2: data.line2 ?? "",
             city: data.city,
             emirate: data.emirate,
-            country: data.country,
+            country: "United Arab Emirates", // hardcoded — not a form field
           },
           items: items.map((i) => ({
             id: i.id,
@@ -137,68 +196,13 @@ export default function CheckoutPage() {
     }
   };
 
-  // ── Order summary content (shared between mobile + desktop) ─────────────────
-  const OrderSummaryItems = () => (
-    <div className="divide-y divide-border">
-      {items.map((item) => (
-        <div
-          key={`${item.id}-${item.selectedColor}-${item.selectedSize}`}
-          className="flex items-center gap-4 py-4"
-        >
-          <div className="relative shrink-0">
-            <div className="w-14 h-14 rounded-xl overflow-hidden bg-muted border border-border">
-              {item.image && (
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  fill
-                  className="object-cover"
-                />
-              )}
-            </div>
-            <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-muted-foreground text-background text-[10px] font-bold flex items-center justify-center leading-none">
-              {item.quantity}
-            </span>
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium leading-tight truncate">{item.name}</p>
-            {(item.selectedColor || item.selectedSize) && (
-              <p className="text-xs text-muted-foreground mt-0.5">
-                {[item.selectedColor, item.selectedSize].filter(Boolean).join(" · ")}
-              </p>
-            )}
-          </div>
-          <p className="text-sm font-medium shrink-0 text-foreground">
-            {formatPrice(item.price * item.quantity)}
-          </p>
-        </div>
-      ))}
-    </div>
-  );
-
-  const OrderSummaryTotals = () => (
-    <div className="space-y-2 pt-4">
-      <div className="flex justify-between text-sm">
-        <span className="text-muted-foreground">Subtotal</span>
-        <span>{formatPrice(subtotal)}</span>
-      </div>
-      <div className="flex justify-between text-sm">
-        <span className="text-muted-foreground">Shipping</span>
-        <span>{formatPrice(SHIPPING_COST)}</span>
-      </div>
-      <div className="flex justify-between font-heading font-bold text-base pt-2 border-t border-border">
-        <span>Total</span>
-        <span>
-          <span className="text-xs font-normal text-muted-foreground mr-1">AED</span>
-          {total.toFixed(2)}
-        </span>
-      </div>
-    </div>
-  );
+  const selectClass =
+    "w-full h-12 rounded-md border border-border bg-card text-foreground px-3 text-sm " +
+    "focus:outline-none focus:ring-2 focus:ring-gold/50 focus:ring-offset-2 focus-visible:ring-2 focus-visible:ring-gold/50";
 
   return (
     <div className="min-h-screen bg-background">
-      {/* ── Minimal header ─────────────────────────────────────────────────── */}
+      {/* Minimal header */}
       <header className="border-b border-border bg-background/95 backdrop-blur sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link href="/" className="font-heading font-bold text-lg tracking-tight text-gold">
@@ -211,72 +215,74 @@ export default function CheckoutPage() {
         </div>
       </header>
 
-      {/* ── Breadcrumb ─────────────────────────────────────────────────────── */}
+      {/* Breadcrumb */}
       <div className="border-b border-border bg-muted/30">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-10 flex items-center gap-1.5 text-xs text-muted-foreground">
           <Link href="/cart" className="hover:text-foreground transition-colors">Cart</Link>
-          <ChevronRight className="w-3 h-3" />
+          <ChevronRight className="w-3 h-3 shrink-0" />
           <span className="text-foreground font-medium">Information</span>
-          <ChevronRight className="w-3 h-3" />
+          <ChevronRight className="w-3 h-3 shrink-0" />
           <span>Payment</span>
         </div>
       </div>
 
-      {/* ── Mobile order summary toggle ────────────────────────────────────── */}
+      {/* Mobile order summary accordion */}
       <div className="lg:hidden border-b border-border bg-muted/20">
         <button
           type="button"
           onClick={() => setSummaryOpen((p) => !p)}
           className="w-full px-4 py-3 flex items-center justify-between text-sm"
+          aria-expanded={summaryOpen}
         >
           <span className="flex items-center gap-2 text-gold font-medium">
-            <ShoppingBag className="w-4 h-4" />
+            <ShoppingBag className="w-4 h-4 shrink-0" />
             {summaryOpen ? "Hide" : "Show"} order summary
             <ChevronDown
-              className={`w-4 h-4 transition-transform ${summaryOpen ? "rotate-180" : ""}`}
+              className={`w-4 h-4 transition-transform duration-200 ${summaryOpen ? "rotate-180" : ""}`}
             />
           </span>
           <span className="font-heading font-bold">{formatPrice(total)}</span>
         </button>
-        <AnimatePresence>
+        <AnimatePresence initial={false}>
           {summaryOpen && (
             <motion.div
+              key="mobile-summary"
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.2, ease: "easeInOut" }}
               className="overflow-hidden"
             >
-              <div className="px-4 pb-4">
-                <OrderSummaryItems />
-                <OrderSummaryTotals />
+              <div className="px-4 pb-5 border-t border-border">
+                <SummaryItems items={items} />
+                <SummaryTotals subtotal={subtotal} total={total} />
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      {/* ── Main layout ────────────────────────────────────────────────────── */}
+      {/* Main */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 lg:py-12">
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="flex flex-col lg:flex-row gap-12">
 
-            {/* ── LEFT: Form ───────────────────────────────────────────────── */}
+            {/* Form (left) */}
             <div className="flex-1 min-w-0 space-y-8">
 
               {/* Contact */}
               <section>
                 <SectionLabel>Contact</SectionLabel>
-                <div className="space-y-3">
-                  <div>
-                    <Input
-                      type="email"
-                      placeholder="Email address"
-                      className="h-12 bg-card border-border focus-visible:ring-gold/50"
-                      {...register("email")}
-                    />
-                    <FieldError msg={errors.email?.message} />
-                  </div>
+                <div>
+                  <Input
+                    type="email"
+                    inputMode="email"
+                    autoComplete="email"
+                    placeholder="Email address"
+                    className="h-12 bg-card border-border focus-visible:ring-gold/50"
+                    {...register("email")}
+                  />
+                  <FieldError msg={errors.email?.message} />
                 </div>
               </section>
 
@@ -287,6 +293,7 @@ export default function CheckoutPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <Input
+                        autoComplete="name"
                         placeholder="Full name"
                         className="h-12 bg-card border-border focus-visible:ring-gold/50"
                         {...register("name")}
@@ -296,6 +303,8 @@ export default function CheckoutPage() {
                     <div>
                       <Input
                         type="tel"
+                        inputMode="tel"
+                        autoComplete="tel"
                         placeholder="Phone (+971 50 000 0000)"
                         className="h-12 bg-card border-border focus-visible:ring-gold/50"
                         {...register("phone")}
@@ -303,24 +312,28 @@ export default function CheckoutPage() {
                       <FieldError msg={errors.phone?.message} />
                     </div>
                   </div>
+
                   <div>
                     <Input
+                      autoComplete="street-address"
                       placeholder="Address"
                       className="h-12 bg-card border-border focus-visible:ring-gold/50"
                       {...register("line1")}
                     />
                     <FieldError msg={errors.line1?.message} />
                   </div>
-                  <div>
-                    <Input
-                      placeholder="Apartment, building, floor (optional)"
-                      className="h-12 bg-card border-border focus-visible:ring-gold/50"
-                      {...register("line2")}
-                    />
-                  </div>
+
+                  <Input
+                    autoComplete="address-line2"
+                    placeholder="Apartment, building, floor (optional)"
+                    className="h-12 bg-card border-border focus-visible:ring-gold/50"
+                    {...register("line2")}
+                  />
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                       <Input
+                        autoComplete="address-level2"
                         placeholder="City / Area"
                         className="h-12 bg-card border-border focus-visible:ring-gold/50"
                         {...register("city")}
@@ -328,10 +341,7 @@ export default function CheckoutPage() {
                       <FieldError msg={errors.city?.message} />
                     </div>
                     <div>
-                      <select
-                        className="w-full h-12 rounded-md border border-border bg-card px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/50 focus-visible:ring-offset-2"
-                        {...register("emirate")}
-                      >
+                      <select className={selectClass} autoComplete="address-level1" {...register("emirate")}>
                         <option value="">Emirate</option>
                         {EMIRATES.map((e) => (
                           <option key={e} value={e}>{e}</option>
@@ -340,33 +350,34 @@ export default function CheckoutPage() {
                       <FieldError msg={errors.emirate?.message} />
                     </div>
                   </div>
-                  <div>
-                    <Input
-                      value="United Arab Emirates"
-                      readOnly
-                      className="h-12 bg-muted border-border text-muted-foreground cursor-not-allowed"
-                    />
-                  </div>
+
+                  {/* Country — display-only, not a registered field */}
+                  <Input
+                    value="United Arab Emirates"
+                    readOnly
+                    tabIndex={-1}
+                    className="h-12 bg-muted/50 border-border text-muted-foreground cursor-default select-none"
+                  />
                 </div>
               </section>
 
               {/* Shipping method */}
               <section>
                 <SectionLabel>Shipping method</SectionLabel>
-                <div className="border border-gold/40 bg-gold/5 rounded-xl px-4 py-4 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
+                <div className="border border-gold/40 bg-gold/5 rounded-xl px-4 py-4 flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3 min-w-0">
                     <div className="w-4 h-4 rounded-full border-2 border-gold flex items-center justify-center shrink-0">
                       <div className="w-2 h-2 rounded-full bg-gold" />
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <p className="text-sm font-medium">Standard Shipping</p>
                       <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
-                        <Truck className="w-3 h-3" />
+                        <Truck className="w-3 h-3 shrink-0" />
                         3–7 business days via Aramex
                       </p>
                     </div>
                   </div>
-                  <span className="text-sm font-semibold">{formatPrice(SHIPPING_COST)}</span>
+                  <span className="text-sm font-semibold shrink-0">{formatPrice(SHIPPING_COST)}</span>
                 </div>
               </section>
 
@@ -374,8 +385,8 @@ export default function CheckoutPage() {
               <section>
                 <SectionLabel>Discount</SectionLabel>
                 <div className="flex gap-2">
-                  <div className="relative flex-1">
-                    <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <div className="relative flex-1 min-w-0">
+                    <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
                     <Input
                       placeholder="Discount code"
                       value={discountCode}
@@ -395,7 +406,7 @@ export default function CheckoutPage() {
               </section>
 
               {/* CTA */}
-              <div className="space-y-4 pt-2">
+              <div className="space-y-4 pt-2 pb-8">
                 <Button
                   type="submit"
                   size="lg"
@@ -415,31 +426,35 @@ export default function CheckoutPage() {
                   )}
                 </Button>
 
-                <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
-                  <Link href="/cart" className="hover:text-foreground transition-colors flex items-center gap-1">
+                {/* Trust row — flex-wrap so it doesn't overflow on small phones */}
+                <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
+                  <Link
+                    href="/cart"
+                    className="hover:text-foreground transition-colors flex items-center gap-1"
+                  >
                     ← Return to cart
                   </Link>
-                  <span>·</span>
+                  <span aria-hidden>·</span>
                   <span className="flex items-center gap-1">
-                    <Lock className="w-3 h-3" /> Payments by Ziina
+                    <Lock className="w-3 h-3 shrink-0" /> Payments by Ziina
                   </span>
-                  <span>·</span>
+                  <span aria-hidden>·</span>
                   <span className="flex items-center gap-1">
-                    <Truck className="w-3 h-3" /> Shipped by Aramex
+                    <Truck className="w-3 h-3 shrink-0" /> Shipped by Aramex
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* ── RIGHT: Sticky order summary (desktop only) ───────────────── */}
+            {/* Order summary sidebar (desktop only) */}
             <div className="hidden lg:block w-[380px] shrink-0">
               <div className="sticky top-28 bg-muted/30 border border-border rounded-2xl p-6">
-                <OrderSummaryItems />
+                <SummaryItems items={items} />
 
-                {/* Discount code - desktop */}
+                {/* Discount code — desktop */}
                 <div className="flex gap-2 mt-4 pt-4 border-t border-border">
-                  <div className="relative flex-1">
-                    <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+                  <div className="relative flex-1 min-w-0">
+                    <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
                     <Input
                       placeholder="Discount code"
                       value={discountCode}
@@ -458,9 +473,8 @@ export default function CheckoutPage() {
                   </Button>
                 </div>
 
-                <OrderSummaryTotals />
+                <SummaryTotals subtotal={subtotal} total={total} />
 
-                {/* Trust badges */}
                 <div className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground mt-6 pt-4 border-t border-border">
                   <Lock className="w-3 h-3 shrink-0" />
                   Secured by Ziina · Shipped by Aramex
