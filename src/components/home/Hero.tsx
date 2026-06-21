@@ -5,7 +5,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Torus, MeshDistortMaterial, Environment } from "@react-three/drei";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Zap, Shield, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Mesh } from "three";
 
@@ -35,36 +35,51 @@ function FloatingShape() {
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Deep dark gradient base */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-secondary/20 pointer-events-none" />
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-background">
+      {/* Grid texture — visible in both modes */}
+      <div className="absolute inset-0 grid-bg pointer-events-none" />
 
-      {/* Subtle grid texture */}
-      <div className="absolute inset-0 grid-bg opacity-100 pointer-events-none" />
-
-      {/* Ambient glow orbs */}
+      {/* Light mode warm accent */}
       <div
-        className="absolute pointer-events-none"
+        className="absolute inset-0 pointer-events-none dark:opacity-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 60% at 60% 50%, rgba(201,148,58,0.06) 0%, transparent 70%)",
+        }}
+      />
+
+      {/* Dark mode gold orbs */}
+      <div
+        className="absolute pointer-events-none opacity-0 dark:opacity-100"
         style={{
           top: "-200px",
           left: "-200px",
           width: "600px",
           height: "600px",
           borderRadius: "50%",
-          background: "rgba(201,148,58,0.08)",
+          background: "rgba(201,148,58,0.12)",
           filter: "blur(120px)",
         }}
       />
       <div
-        className="absolute pointer-events-none"
+        className="absolute pointer-events-none opacity-0 dark:opacity-100"
         style={{
           bottom: "-200px",
           right: "-150px",
           width: "500px",
           height: "500px",
           borderRadius: "50%",
-          background: "rgba(201,148,58,0.06)",
+          background: "rgba(201,148,58,0.08)",
           filter: "blur(120px)",
+        }}
+      />
+
+      {/* Gold accent stripe — visible in both modes */}
+      <div
+        className="absolute left-0 top-0 bottom-0 w-1 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(to bottom, transparent, #C9943A 30%, #F0C060 60%, #C9943A 80%, transparent)",
         }}
       />
 
@@ -76,31 +91,23 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
+            {/* Eyebrow */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1, duration: 0.5 }}
-              className="flex items-center gap-3 mb-6"
+              className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full border border-[#C9943A]/30 bg-[#C9943A]/10"
             >
-              <div className="h-px w-8 bg-[#C9943A]" />
-              <span className="text-[#C9943A] text-xs font-medium uppercase tracking-[0.2em]">
-                Handcrafted in UAE
+              <span className="w-1.5 h-1.5 rounded-full bg-[#C9943A] animate-pulse" />
+              <span className="text-[#C9943A] text-xs font-semibold uppercase tracking-[0.18em]">
+                Handcrafted in UAE · Made to order
               </span>
             </motion.div>
 
             <h1 className="font-heading text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.05] mb-6">
               Figures forged
               <br />
-              layer by{" "}
-              <span className="gradient-text relative">
-                layer
-                <motion.span
-                  className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#C9943A] origin-left"
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{ delay: 0.8, duration: 0.5 }}
-                />
-              </span>
+              <span className="gradient-text">layer by layer</span>
             </h1>
 
             <p className="text-muted-foreground text-lg leading-relaxed max-w-md mb-8">
@@ -109,10 +116,10 @@ export default function Hero() {
               workshop.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 mb-10">
               <Button
                 size="lg"
-                className="bg-[#C9943A] hover:opacity-90 text-white font-medium group glow-gold"
+                className="bg-[#C9943A] hover:opacity-90 text-white font-semibold group glow-gold"
                 asChild
               >
                 <Link href="/shop">
@@ -120,37 +127,24 @@ export default function Hero() {
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" asChild>
+              <Button size="lg" variant="outline" className="border-[#C9943A]/40 hover:border-[#C9943A] hover:bg-[#C9943A]/5" asChild>
                 <Link href="#brand-story">How It Works</Link>
               </Button>
             </div>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1, duration: 0.5 }}
-              className="flex items-center gap-6 mt-12 pt-8 border-t border-border"
-            >
+            {/* Trust badges */}
+            <div className="flex flex-wrap items-center gap-4">
               {[
-                { value: "100%", label: "Made to order" },
-                { value: "3–7", label: "Days delivery" },
-                { value: "50+", label: "Models available" },
-              ].map((stat, i) => (
-                <div key={stat.label} className="flex items-center gap-6">
-                  {i > 0 && (
-                    <span className="w-1 h-1 rounded-full bg-[#C9943A]/40 shrink-0" />
-                  )}
-                  <div>
-                    <div className="font-heading font-extrabold text-2xl text-[#C9943A]">
-                      {stat.value}
-                    </div>
-                    <div className="text-xs text-muted-foreground mt-0.5">
-                      {stat.label}
-                    </div>
-                  </div>
+                { icon: Star, label: "Premium quality" },
+                { icon: Zap, label: "3–7 day delivery" },
+                { icon: Shield, label: "Secure checkout" },
+              ].map(({ icon: Icon, label }) => (
+                <div key={label} className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Icon className="h-3.5 w-3.5 text-[#C9943A]" />
+                  {label}
                 </div>
               ))}
-            </motion.div>
+            </div>
           </motion.div>
 
           {/* 3D Canvas */}
@@ -160,9 +154,15 @@ export default function Hero() {
             transition={{ delay: 0.3, duration: 0.7 }}
             className="relative h-80 sm:h-96 lg:h-[520px] w-full"
           >
+            {/* Decorative corner frames */}
+            <div className="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 border-[#C9943A]/60 rounded-tl-lg pointer-events-none z-10" />
+            <div className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-[#C9943A]/60 rounded-tr-lg pointer-events-none z-10" />
+            <div className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-[#C9943A]/60 rounded-bl-lg pointer-events-none z-10" />
+            <div className="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2 border-[#C9943A]/60 rounded-br-lg pointer-events-none z-10" />
+
             <div
-              className="absolute inset-0 rounded-3xl overflow-hidden ring-1 ring-[rgba(201,148,58,0.2)]"
-              style={{ boxShadow: "0 0 60px rgba(201,148,58,0.12)" }}
+              className="absolute inset-0 rounded-3xl overflow-hidden ring-1 ring-[rgba(201,148,58,0.25)] bg-secondary/30"
+              style={{ boxShadow: "0 0 60px rgba(201,148,58,0.15), inset 0 0 40px rgba(201,148,58,0.05)" }}
             >
               <Canvas
                 camera={{ position: [0, 0, 3.5], fov: 45 }}
@@ -184,6 +184,33 @@ export default function Hero() {
                 </Suspense>
               </Canvas>
             </div>
+
+            {/* Stats card overlay */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1, duration: 0.5 }}
+              className="absolute -bottom-4 -left-4 bg-card border border-border rounded-2xl px-5 py-4 shadow-xl z-20"
+            >
+              <div className="flex items-center gap-4">
+                {[
+                  { value: "100%", label: "Made to order" },
+                  { value: "50+", label: "Models" },
+                ].map((stat, i) => (
+                  <div key={stat.label} className="flex items-center gap-4">
+                    {i > 0 && <div className="w-px h-8 bg-border" />}
+                    <div>
+                      <div className="font-heading font-extrabold text-xl text-[#C9943A]">
+                        {stat.value}
+                      </div>
+                      <div className="text-[10px] text-muted-foreground mt-0.5 uppercase tracking-wider">
+                        {stat.label}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </div>

@@ -37,7 +37,7 @@ export default function Header() {
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
           scrolled
-            ? "bg-background/80 backdrop-blur-md border-b border-border shadow-sm"
+            ? "bg-background/85 backdrop-blur-xl border-b border-[#C9943A]/20 shadow-[0_1px_24px_rgba(201,148,58,0.08)]"
             : "bg-transparent"
         )}
       >
@@ -46,7 +46,7 @@ export default function Header() {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group">
               <span
-                className="text-xl lg:text-2xl font-heading font-bold tracking-tight text-gold"
+                className="text-xl lg:text-2xl font-heading font-bold tracking-tight gradient-text"
                 style={{ letterSpacing: "0.08em" }}
               >
                 FLAMEMARKET
@@ -59,9 +59,10 @@ export default function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
+                  className="text-sm text-muted-foreground hover:text-[#C9943A] transition-colors duration-200 relative group/link"
                 >
                   {link.label}
+                  <span className="absolute -bottom-0.5 left-0 right-0 h-px bg-[#C9943A] scale-x-0 group-hover/link:scale-x-100 transition-transform origin-left duration-200" />
                 </Link>
               ))}
             </nav>
