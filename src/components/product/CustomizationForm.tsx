@@ -185,7 +185,7 @@ export default function CustomizationForm({ product }: CustomizationFormProps) {
         <Button
           size="lg"
           onClick={handleAddToCart}
-          className="w-full bg-gold hover:bg-gold/90 text-white font-semibold gap-2 transition-all duration-200 hover:shadow-lg hover:shadow-gold/20"
+          className="w-full bg-[#C9943A] hover:opacity-90 text-white font-semibold gap-2 glow-gold"
         >
           <ShoppingBag className="h-4 w-4" />
           Add to Cart

@@ -1,77 +1,68 @@
 import Link from "next/link";
 import { Share2, Mail, MessageCircle } from "lucide-react";
 
+const shopLinks = [
+  { href: "/shop", label: "All Products" },
+  { href: "/shop?category=figures", label: "Figures" },
+  { href: "/shop?category=miniatures", label: "Miniatures" },
+  { href: "/shop?category=custom", label: "Custom Prints" },
+];
+
+const infoLinks = [
+  { href: "/track", label: "Track Order" },
+  { href: "mailto:hello@flamemarket.com", label: "Contact" },
+];
+
+const socials = [
+  { href: "https://instagram.com", label: "Instagram", icon: Share2 },
+  { href: "mailto:hello@flamemarket.com", label: "Email", icon: Mail },
+  { href: "https://wa.me/971500000000", label: "WhatsApp", icon: MessageCircle },
+];
+
 export default function Footer() {
   return (
-    <footer
-      className="mt-auto border-t"
-      style={{
-        backgroundColor: "#08080A",
-        borderTopColor: "rgba(255,255,255,0.06)",
-      }}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-          {/* Brand */}
-          <div>
-            <div className="flex items-center gap-2 mb-4">
+    <footer className="mt-auto bg-[#0D0D0F] dark:bg-[#08080A] border-t border-white/6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-18">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+
+          {/* Brand col */}
+          <div className="md:col-span-2">
+            <Link href="/shop" className="inline-block mb-4">
               <span className="font-heading font-bold text-xl tracking-widest gradient-text">
                 FLAMEMARKET
               </span>
-            </div>
-            <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
+            </Link>
+            <p className="text-sm text-white/40 leading-relaxed max-w-xs mb-6">
               Precision 3D printed figures made to order from our UAE workshop.
               Every piece crafted fresh — no warehouse, no compromises.
             </p>
-            <div className="flex items-center gap-4 mt-6">
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground transition-all duration-200 hover:text-[#C9943A]"
-                style={{ ["--tw-drop-shadow" as string]: "none" }}
-                aria-label="Instagram"
-              >
-                <Share2
-                  className="h-5 w-5 hover:drop-shadow-[0_0_6px_rgba(201,148,58,0.6)]"
-                  style={{ transition: "filter 0.2s ease" }}
-                />
-              </a>
-              <a
-                href="mailto:hello@flamemarket.com"
-                className="text-muted-foreground transition-all duration-200 hover:text-[#C9943A]"
-                aria-label="Email"
-              >
-                <Mail className="h-5 w-5" />
-              </a>
-              <a
-                href="https://wa.me/971500000000"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground transition-all duration-200 hover:text-[#C9943A]"
-                aria-label="WhatsApp"
-              >
-                <MessageCircle className="h-5 w-5" />
-              </a>
+            <div className="flex items-center gap-3">
+              {socials.map(({ href, label, icon: Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target={href.startsWith("http") ? "_blank" : undefined}
+                  rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  aria-label={label}
+                  className="w-9 h-9 rounded-xl border border-white/10 flex items-center justify-center text-white/40 hover:text-[#C9943A] hover:border-[#C9943A]/40 transition-all duration-200"
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              ))}
             </div>
           </div>
 
           {/* Shop */}
           <div>
-            <h3 className="font-heading font-semibold text-sm uppercase tracking-widest mb-4 text-muted-foreground">
+            <h3 className="font-heading font-semibold text-[10px] uppercase tracking-[0.2em] mb-5 text-white/30">
               Shop
             </h3>
             <ul className="space-y-3">
-              {[
-                { href: "/shop", label: "All Products" },
-                { href: "/shop?category=figures", label: "Figures" },
-                { href: "/shop?category=miniatures", label: "Miniatures" },
-                { href: "/shop?category=custom", label: "Custom Prints" },
-              ].map((link) => (
+              {shopLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
+                    className="text-sm text-white/50 hover:text-white/90 transition-colors duration-200"
                   >
                     {link.label}
                   </Link>
@@ -82,19 +73,15 @@ export default function Footer() {
 
           {/* Info */}
           <div>
-            <h3 className="font-heading font-semibold text-sm uppercase tracking-widest mb-4 text-muted-foreground">
+            <h3 className="font-heading font-semibold text-[10px] uppercase tracking-[0.2em] mb-5 text-white/30">
               Info
             </h3>
             <ul className="space-y-3">
-              {[
-                { href: "/track", label: "Track Order" },
-                { href: "mailto:hello@flamemarket.com", label: "Contact" },
-                { href: "/faq", label: "FAQ" },
-              ].map((link) => (
+              {infoLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
+                    className="text-sm text-white/50 hover:text-white/90 transition-colors duration-200"
                   >
                     {link.label}
                   </Link>
@@ -104,20 +91,20 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Gradient separator line */}
+        {/* Divider */}
         <div
-          className="my-8 h-px"
-          style={{
-            background: "linear-gradient(to right, transparent, rgba(201,148,58,0.2), transparent)",
-          }}
+          className="my-10 h-px"
+          style={{ background: "linear-gradient(to right, transparent, rgba(201,148,58,0.25), transparent)" }}
         />
 
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/30">
           <p>© {new Date().getFullYear()} FLAMEMARKET. All rights reserved.</p>
           <p>
-            Payments secured by{" "}
-            <span className="text-[#C9943A] font-medium">Ziina</span> · Shipping by{" "}
-            <span className="font-medium text-foreground/60">Aramex</span>
+            Payments by{" "}
+            <span className="text-[#C9943A]/70 font-medium">Ziina</span>
+            {" · "}
+            Shipping by{" "}
+            <span className="text-white/50 font-medium">Aramex</span>
           </p>
         </div>
       </div>
