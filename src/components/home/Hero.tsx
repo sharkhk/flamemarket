@@ -36,10 +36,37 @@ function FloatingShape() {
 export default function Hero() {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-secondary/30 pointer-events-none" />
-      <div className="absolute top-1/4 -left-40 w-96 h-96 rounded-full bg-gold/5 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 -right-40 w-96 h-96 rounded-full bg-gold/5 blur-3xl pointer-events-none" />
+      {/* Deep dark gradient base */}
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-secondary/20 pointer-events-none" />
+
+      {/* Subtle grid texture */}
+      <div className="absolute inset-0 grid-bg opacity-100 pointer-events-none" />
+
+      {/* Ambient glow orbs */}
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          top: "-200px",
+          left: "-200px",
+          width: "600px",
+          height: "600px",
+          borderRadius: "50%",
+          background: "rgba(201,148,58,0.08)",
+          filter: "blur(120px)",
+        }}
+      />
+      <div
+        className="absolute pointer-events-none"
+        style={{
+          bottom: "-200px",
+          right: "-150px",
+          width: "500px",
+          height: "500px",
+          borderRadius: "50%",
+          background: "rgba(201,148,58,0.06)",
+          filter: "blur(120px)",
+        }}
+      />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center pt-24 pb-16">
@@ -55,8 +82,8 @@ export default function Hero() {
               transition={{ delay: 0.1, duration: 0.5 }}
               className="flex items-center gap-3 mb-6"
             >
-              <div className="h-px w-8 bg-gold" />
-              <span className="text-gold text-xs font-medium uppercase tracking-[0.2em]">
+              <div className="h-px w-8 bg-[#C9943A]" />
+              <span className="text-[#C9943A] text-xs font-medium uppercase tracking-[0.2em]">
                 Handcrafted in UAE
               </span>
             </motion.div>
@@ -65,10 +92,10 @@ export default function Hero() {
               Figures forged
               <br />
               layer by{" "}
-              <span className="text-gold relative">
+              <span className="gradient-text relative">
                 layer
                 <motion.span
-                  className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gold origin-left"
+                  className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#C9943A] origin-left"
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1 }}
                   transition={{ delay: 0.8, duration: 0.5 }}
@@ -85,7 +112,7 @@ export default function Hero() {
             <div className="flex flex-col sm:flex-row gap-4">
               <Button
                 size="lg"
-                className="bg-gold hover:opacity-90 text-white font-medium group"
+                className="bg-[#C9943A] hover:opacity-90 text-white font-medium group glow-gold"
                 asChild
               >
                 <Link href="/shop">
@@ -108,13 +135,18 @@ export default function Hero() {
                 { value: "100%", label: "Made to order" },
                 { value: "3–7", label: "Days delivery" },
                 { value: "50+", label: "Models available" },
-              ].map((stat) => (
-                <div key={stat.label}>
-                  <div className="font-heading font-bold text-xl text-gold">
-                    {stat.value}
-                  </div>
-                  <div className="text-xs text-muted-foreground mt-0.5">
-                    {stat.label}
+              ].map((stat, i) => (
+                <div key={stat.label} className="flex items-center gap-6">
+                  {i > 0 && (
+                    <span className="w-1 h-1 rounded-full bg-[#C9943A]/40 shrink-0" />
+                  )}
+                  <div>
+                    <div className="font-heading font-extrabold text-2xl text-[#C9943A]">
+                      {stat.value}
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-0.5">
+                      {stat.label}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -128,7 +160,10 @@ export default function Hero() {
             transition={{ delay: 0.3, duration: 0.7 }}
             className="relative h-80 sm:h-96 lg:h-[520px] w-full"
           >
-            <div className="absolute inset-0 rounded-3xl overflow-hidden">
+            <div
+              className="absolute inset-0 rounded-3xl overflow-hidden ring-1 ring-[rgba(201,148,58,0.2)]"
+              style={{ boxShadow: "0 0 60px rgba(201,148,58,0.12)" }}
+            >
               <Canvas
                 camera={{ position: [0, 0, 3.5], fov: 45 }}
                 gl={{ antialias: true, alpha: true }}
@@ -149,7 +184,6 @@ export default function Hero() {
                 </Suspense>
               </Canvas>
             </div>
-
           </motion.div>
         </div>
       </div>
@@ -164,7 +198,7 @@ export default function Hero() {
         <motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ repeat: Infinity, duration: 1.5 }}
-          className="w-px h-10 bg-gradient-to-b from-gold/60 to-transparent"
+          className="w-px h-10 bg-gradient-to-b from-[rgba(201,148,58,0.6)] to-transparent"
         />
       </motion.div>
     </section>
