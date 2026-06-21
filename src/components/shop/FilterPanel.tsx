@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, SlidersHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface FilterPanelProps {
@@ -13,8 +13,8 @@ interface FilterPanelProps {
 
 const SORT_OPTIONS = [
   { value: "", label: "Newest" },
-  { value: "price-asc", label: "Price: Low to High" },
-  { value: "price-desc", label: "Price: High to Low" },
+  { value: "price-asc", label: "Price ↑" },
+  { value: "price-desc", label: "Price ↓" },
 ];
 
 function formatCategoryLabel(cat: string): string {
@@ -45,60 +45,55 @@ export default function FilterPanel({
     [router, searchParams]
   );
 
-  const handleCategoryClick = (cat: string | null) => {
-    updateParams("category", cat);
-  };
-
-  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    updateParams("sort", e.target.value || null);
-  };
-
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-      {/* Category pills — horizontally scrollable */}
-      <div className="flex-1 overflow-x-auto pb-1 -mb-1 scrollbar-none">
+    <div className="flex items-center gap-3">
+      {/* Category pills */}
+      <div className="flex-1 overflow-x-auto scrollbar-none">
         <div className="flex items-center gap-2 w-max">
-          {/* All pill */}
           <button
-            onClick={() => handleCategoryClick(null)}
+            onClick={() => updateParams("category", null)}
             className={cn(
-              "inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap border",
+              "inline-flex items-center px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 whitespace-nowrap border",
               activeCategory === null
-                ? "bg-gold text-white border-gold shadow-sm"
-                : "bg-transparent text-muted-foreground border-border hover:border-gold hover:text-foreground"
+                ? "bg-[#C9943A] text-white border-[#C9943A] shadow-[0_0_12px_rgba(201,148,58,0.4)]"
+                : "bg-transparent text-muted-foreground border-border hover:border-[#C9943A]/60 hover:text-foreground"
             )}
           >
-            All
+            ALL
           </button>
 
           {categories.map((cat) => (
             <button
               key={cat}
-              onClick={() => handleCategoryClick(cat)}
+              onClick={() => updateParams("category", cat)}
               className={cn(
-                "inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap border",
+                "inline-flex items-center px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 whitespace-nowrap border",
                 activeCategory === cat
-                  ? "bg-gold text-white border-gold shadow-sm"
-                  : "bg-transparent text-muted-foreground border-border hover:border-gold hover:text-foreground"
+                  ? "bg-[#C9943A] text-white border-[#C9943A] shadow-[0_0_12px_rgba(201,148,58,0.4)]"
+                  : "bg-transparent text-muted-foreground border-border hover:border-[#C9943A]/60 hover:text-foreground"
               )}
             >
-              {formatCategoryLabel(cat)}
+              {formatCategoryLabel(cat).toUpperCase()}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Sort dropdown */}
-      <div className="relative flex-shrink-0">
+      {/* Divider */}
+      <div className="w-px h-5 bg-border flex-shrink-0" />
+
+      {/* Sort */}
+      <div className="relative flex-shrink-0 flex items-center gap-1.5">
+        <SlidersHorizontal className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
         <select
           value={activeSort ?? ""}
-          onChange={handleSortChange}
+          onChange={(e) => updateParams("sort", e.target.value || null)}
           className={cn(
-            "appearance-none pl-3 pr-8 py-1.5 rounded-full text-sm font-medium",
-            "bg-transparent border border-border text-muted-foreground",
-            "hover:border-gold hover:text-foreground",
-            "focus:outline-none focus:border-gold focus:text-foreground",
-            "transition-all duration-200 cursor-pointer"
+            "appearance-none pl-1 pr-6 py-1 text-xs font-medium",
+            "bg-transparent text-muted-foreground",
+            "hover:text-foreground",
+            "focus:outline-none focus:text-foreground",
+            "transition-colors duration-200 cursor-pointer"
           )}
         >
           {SORT_OPTIONS.map((opt) => (
@@ -107,7 +102,7 @@ export default function FilterPanel({
             </option>
           ))}
         </select>
-        <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+        <ChevronDown className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground" />
       </div>
     </div>
   );

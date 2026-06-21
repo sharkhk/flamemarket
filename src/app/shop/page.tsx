@@ -36,7 +36,6 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
 
   const allProducts = await getProducts();
 
-  // Extract unique categories
   const categories = Array.from(
     new Set(
       allProducts
@@ -45,50 +44,69 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
     )
   ).sort();
 
-  // Filter by category
   let filtered = activeCategory
     ? allProducts.filter((p) => p.category === activeCategory)
     : allProducts;
 
-  // Sort
   if (activeSort === "price-asc") {
     filtered = [...filtered].sort((a, b) => a.price - b.price);
   } else if (activeSort === "price-desc") {
     filtered = [...filtered].sort((a, b) => b.price - a.price);
   }
-  // default: newest (already ordered by created_at desc from Supabase)
 
   return (
     <>
       <Header />
-      <main className="flex-1 pt-20 lg:pt-24">
-        {/* Hero text */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-          <div className="mb-2">
-            <span className="text-xs font-medium tracking-[0.2em] uppercase text-gold">
-              FLAMEMARKET
-            </span>
+      <main className="flex-1">
+
+        {/* ── Shop header ── */}
+        <section className="relative pt-20 lg:pt-24 overflow-hidden bg-background">
+          <div className="absolute inset-0 grid-bg pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#C9943A]/30 to-transparent pointer-events-none" />
+
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+              <div>
+                <p className="text-[#C9943A] text-xs font-semibold uppercase tracking-[0.22em] mb-3">
+                  FLAMEMARKET · Made in UAE
+                </p>
+                <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-none">
+                  The{" "}
+                  <span className="gradient-text">Catalogue</span>
+                </h1>
+                <p className="text-muted-foreground text-base mt-3 max-w-md">
+                  3D printed figures &amp; miniatures, made to order and shipped
+                  from our UAE workshop.
+                </p>
+              </div>
+
+              {/* Product count badge */}
+              <div className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#C9943A]/30 bg-[#C9943A]/8 self-start sm:self-auto">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C9943A]" />
+                <span className="text-[#C9943A] text-sm font-semibold tabular-nums">
+                  {filtered.length} {filtered.length === 1 ? "piece" : "pieces"}
+                </span>
+              </div>
+            </div>
           </div>
-          <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground mb-4">
-            The Catalogue
-          </h1>
-          <p className="text-muted-foreground text-base sm:text-lg max-w-xl">
-            Figures, miniatures, and custom prints — all made to order and
-            shipped directly from our UAE workshop.
-          </p>
         </section>
 
-        {/* Filter + Grid */}
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-          <FilterPanel
-            categories={categories}
-            activeCategory={activeCategory}
-            activeSort={activeSort}
-          />
-          <div className="mt-8">
-            <ProductGrid products={filtered} />
+        {/* ── Sticky filter bar ── */}
+        <div className="sticky top-[64px] lg:top-[80px] z-30 bg-background/85 backdrop-blur-xl border-b border-border">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <FilterPanel
+              categories={categories}
+              activeCategory={activeCategory}
+              activeSort={activeSort}
+            />
           </div>
+        </div>
+
+        {/* ── Grid ── */}
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 pb-28">
+          <ProductGrid products={filtered} />
         </section>
+
       </main>
       <Footer />
     </>
