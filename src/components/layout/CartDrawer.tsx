@@ -191,12 +191,21 @@ export default function CartDrawer() {
                   </Link>
                 </Button>
 
-                <button
-                  onClick={() => setOpen(false)}
-                  className="w-full text-center text-xs text-muted-foreground hover:text-foreground transition-colors py-1"
-                >
-                  Continue shopping
-                </button>
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <button
+                    onClick={() => setOpen(false)}
+                    className="hover:text-foreground transition-colors py-1"
+                  >
+                    Continue shopping
+                  </button>
+                  <Link
+                    href="/cart"
+                    onClick={() => setOpen(false)}
+                    className="hover:text-foreground transition-colors py-1 underline underline-offset-2"
+                  >
+                    View full cart
+                  </Link>
+                </div>
               </div>
             )}
           </motion.div>
