@@ -205,7 +205,7 @@ export default function CheckoutPage() {
       {/* Minimal header */}
       <header className="border-b border-border bg-background/95 backdrop-blur sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="font-heading font-bold text-lg tracking-tight text-gold">
+          <Link href="/shop" className="font-heading font-bold text-lg tracking-tight gradient-text">
             FLAMEMARKET
           </Link>
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -215,14 +215,45 @@ export default function CheckoutPage() {
         </div>
       </header>
 
-      {/* Breadcrumb */}
-      <div className="border-b border-border bg-muted/30">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-10 flex items-center gap-1.5 text-xs text-muted-foreground">
-          <Link href="/cart" className="hover:text-foreground transition-colors">Cart</Link>
-          <ChevronRight className="w-3 h-3 shrink-0" />
-          <span className="text-foreground font-medium">Information</span>
-          <ChevronRight className="w-3 h-3 shrink-0" />
-          <span>Payment</span>
+      {/* Step breadcrumb */}
+      <div className="border-b border-border bg-background/60">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-12 flex items-center gap-2">
+          {[
+            { label: "Cart", href: "/cart" },
+            { label: "Information", href: null },
+            { label: "Payment", href: null },
+          ].map((step, i, arr) => (
+            <div key={step.label} className="flex items-center gap-2">
+              {i > 0 && <ChevronRight className="w-3 h-3 text-border shrink-0" />}
+              <div className="flex items-center gap-1.5">
+                <span
+                  className={`w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center ${
+                    i === 0
+                      ? "bg-border text-muted-foreground"
+                      : i === 1
+                      ? "bg-[#C9943A] text-white"
+                      : "bg-border text-muted-foreground"
+                  }`}
+                >
+                  {i + 1}
+                </span>
+                {step.href ? (
+                  <Link
+                    href={step.href}
+                    className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {step.label}
+                  </Link>
+                ) : (
+                  <span
+                    className={`text-xs font-medium ${i === 1 ? "text-foreground" : "text-muted-foreground"}`}
+                  >
+                    {step.label}
+                  </span>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -411,7 +442,7 @@ export default function CheckoutPage() {
                   type="submit"
                   size="lg"
                   disabled={loading}
-                  className="w-full h-14 text-base font-semibold bg-gold hover:opacity-90 text-white rounded-xl"
+                  className="w-full h-14 text-base font-semibold bg-[#C9943A] hover:opacity-90 text-white rounded-xl glow-gold"
                 >
                   {loading ? (
                     <>
